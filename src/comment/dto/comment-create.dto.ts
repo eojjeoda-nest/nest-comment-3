@@ -7,10 +7,8 @@ import {
   MinLength,
 } from 'class-validator';
 
+// 댓글, 대댓글 공통 dto
 export class CommentCreateDto {
-  @IsNumber()
-  readonly postId: number;
-
   // 일반 댓글의 경우 parentId 없음
   @IsOptional()
   @IsNumber()

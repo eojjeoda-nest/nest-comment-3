@@ -4,14 +4,15 @@ import { PostNotFoundException } from '../../common/error/exceptions/post.except
 import { Post } from '../entities/post.entity';
 import { Comment } from '../entities/comment.entity';
 import { CommentNotFondException } from '../../common/error/exceptions/comment.exception';
+import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 
 @Injectable()
 export class CommentService {
-  async create(commentCreateDto: CommentCreateDto) {
+  async create(commentCreateDto: PostCommentCreateDto) {
     const { postId } = commentCreateDto;
     const post = await this.getPostById(postId);
+    const comment = Comment.of(post, commentCreateDto);
 
-    const comment = await Comment.of(post, commentCreateDto);
     await Comment.save(comment);
   }
 
