@@ -1,9 +1,15 @@
-import { CommentEntity } from 'src/comments/entities/comment.entity';
+import { CommonEntity } from 'src/common/entities/common.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
-export class PostEntity extends CommentEntity {
+export class PostEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
   primaryPostId: number;
 
@@ -13,6 +19,7 @@ export class PostEntity extends CommentEntity {
   @Column({ length: 1000 })
   content: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.posts)
+  @ManyToOne(() => UserEntity, (user) => user.posts)
+  @JoinColumn({ name: 'user' })
   user: UserEntity;
 }
