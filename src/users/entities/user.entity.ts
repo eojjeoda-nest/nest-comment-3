@@ -1,5 +1,6 @@
 import { CommonEntity } from 'src/common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { PostEntity } from 'src/posts/entities/post.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class UserEntity extends CommonEntity {
@@ -12,4 +13,7 @@ export class UserEntity extends CommonEntity {
 
   @Column({ length: 20 })
   userPw: string;
+
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[];
 }
