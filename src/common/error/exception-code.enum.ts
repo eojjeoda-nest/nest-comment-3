@@ -1,5 +1,5 @@
 export enum GlobalExceptionCodeEnum {
-  UnCached = 'G9999',
+  UnCached = 'G0000',
 }
 
 export enum PostExceptionCodeEnum {

@@ -8,21 +8,22 @@ import { GlobalExceptionCodeEnum } from '../exception-code.enum';
 export interface IBaseException {
   statusCode: number;
   errorCode: string; // Custom ErrorCode
-  timestamp: Date;
-  path: string;
+  message: string;
 }
 
 // 커스텀 익셉션을 위한 base exception
 export class BaseException extends HttpException implements IBaseException {
   statusCode: number;
   errorCode: string;
-  timestamp: Date;
-  path: string;
+  message: string;
 
-  constructor(statusCode: number, errorCode: string) {
+  constructor(statusCode: number, errorCode: string, message?: string) {
     super(errorCode, statusCode);
-    this.errorCode = errorCode; // 필요?
-    this.statusCode = statusCode; //필요?
+    this.errorCode = errorCode;
+    this.statusCode = statusCode;
+    if (message) {
+      this.message = message;
+    }
   }
 }
 

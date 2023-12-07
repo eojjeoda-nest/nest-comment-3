@@ -10,6 +10,9 @@ export class CommentService {
   async create(commentCreateDto: CommentCreateDto) {
     const { postId } = commentCreateDto;
     await this.checkPostExists(postId);
+
+    const comment = await Comment.of(commentCreateDto);
+    await Comment.save(comment);
   }
 
   async checkPostExists(postId: number) {
