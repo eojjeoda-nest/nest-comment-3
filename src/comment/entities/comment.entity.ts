@@ -41,9 +41,11 @@ export class Comment extends CommonEntity {
   @OneToMany(() => Comment, (category) => category.parent)
   children: Comment[];
 
-  static of(partial: Partial<Comment>): Comment {
+  static of(post: Post, partial: Partial<Comment>): Comment {
     const comment = new Comment();
+    comment.post = post;
     Object.assign(comment, partial);
+
     return comment;
   }
 }
