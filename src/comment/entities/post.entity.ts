@@ -10,6 +10,6 @@ export class Post extends CommonEntity {
   @Column()
   title: string;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
-  comments: Comment[];
+  @OneToMany(() => Comment, (comment) => comment.post, { lazy: true })
+  comments: Promise<Comment[]>;
 }

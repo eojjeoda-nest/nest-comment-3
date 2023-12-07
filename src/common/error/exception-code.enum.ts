@@ -5,7 +5,6 @@ export enum GlobalExceptionCodeEnum {
 export enum PostExceptionCodeEnum {
   PostNotFound = 'P0001',
 }
-
 export enum CommentExceptionCodeEnum {
   CommentNotFound = 'C0001',
 }

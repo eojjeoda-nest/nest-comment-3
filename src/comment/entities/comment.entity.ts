@@ -31,19 +31,32 @@ export class Comment extends CommonEntity {
 
   //좋아요
 
-  @ManyToOne(() => Post, (post) => post.comments)
+  @ManyToOne(() => Post, (post) => post.comments, { lazy: true })
   post: Post;
 
   // 인접리스트 자기참조
-  @ManyToOne(() => Comment, (category) => category.children)
+  @ManyToOne(() => Comment, (category) => category.children, { lazy: true })
   parent: Comment;
 
-  @OneToMany(() => Comment, (category) => category.parent)
+  @OneToMany(() => Comment, (category) => category.parent, { lazy: true })
   children: Comment[];
 
   static of(post: Post, partial: Partial<Comment>): Comment {
     const comment = new Comment();
     comment.post = post;
+    Object.assign(comment, partial);
+
+    return comment;
+  }
+
+  static replyOf(
+    post: Post,
+    parent: Comment,
+    partial: Partial<Comment>,
+  ): Comment {
+    const comment = new Comment();
+    comment.post = post;
+    comment.parent = parent;
     Object.assign(comment, partial);
 
     return comment;

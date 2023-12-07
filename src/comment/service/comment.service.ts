@@ -5,6 +5,7 @@ import { Post } from '../entities/post.entity';
 import { Comment } from '../entities/comment.entity';
 import { CommentNotFondException } from '../../common/error/exceptions/comment.exception';
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
+import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
 
 @Injectable()
 export class CommentService {
@@ -12,6 +13,16 @@ export class CommentService {
     const { postId } = commentCreateDto;
     const post = await this.getPostById(postId);
     const comment = Comment.of(post, commentCreateDto);
+
+    await Comment.save(comment);
+  }
+
+  async createReply(commentCreateDto: ReplyCommentCreateDto) {
+    const { parentId } = commentCreateDto;
+    const parent = await this.getCommentById(parentId);
+    const post = parent.post;
+
+    const comment = Comment.replyOf(post, parent, commentCreateDto);
 
     await Comment.save(comment);
   }
@@ -24,5 +35,14 @@ export class CommentService {
     }
 
     return post;
+  }
+
+  async getCommentById(commentId: number) {
+    const comment = await Comment.findOneBy({ id: commentId });
+    if (!comment) {
+      throw new CommentNotFondException();
+    }
+
+    return comment;
   }
 }

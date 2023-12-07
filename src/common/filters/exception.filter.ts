@@ -43,6 +43,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const res =
       exception instanceof BaseException ? exception : new UnCatchedException();
 
+    console.log(exception);
+
     response.status(res.statusCode).json({
       errorCode: res.errorCode,
       statusCode: res.statusCode,
