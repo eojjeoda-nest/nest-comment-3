@@ -1,3 +1,4 @@
+import { CommentEntity } from 'src/comments/entities/comment.entity';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import {
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -22,4 +24,7 @@ export class PostEntity extends CommonEntity {
   @ManyToOne(() => UserEntity, (user) => user.posts)
   @JoinColumn({ name: 'user' })
   user: UserEntity;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.post)
+  comments: CommentEntity[];
 }
