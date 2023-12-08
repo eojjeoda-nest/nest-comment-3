@@ -1,6 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { CommentDto, ResponseCommentDto } from './dto/comment.dto';
+import {
+  CommentDto,
+  RecommentDto,
+  ResponseCommentDto,
+} from './dto/comment.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('api/v1/comment')
@@ -16,6 +20,17 @@ export class CommentController {
   })
   createComment(@Body() dto: CommentDto) {
     const result = this.commentService.createComment(dto);
+    return result;
+  }
+
+  @Post(':id')
+  @ApiOperation({ summary: '대댓글 생성 API' })
+  @ApiCreatedResponse({
+    description: '대댓글을 작성한다.',
+    type: ResponseCommentDto,
+  })
+  createRecomment(@Param('id') id: number, @Body() dto: RecommentDto) {
+    const result = this.commentService.createRecomment(id, dto);
     return result;
   }
 }

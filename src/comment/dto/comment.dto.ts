@@ -5,14 +5,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 
 export class CommentDto {
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty({ description: 'id' })
-  id: number;
-
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
@@ -48,6 +43,9 @@ export class ResponseCommentDto {
   @ApiProperty({ description: 'writer' })
   writer: string;
 
+  @ApiProperty({ description: 'commentId' })
+  commentId: number;
+
   @ApiProperty({ description: 'postId' })
   postId: number;
 
@@ -57,3 +55,15 @@ export class ResponseCommentDto {
   @ApiProperty({ description: 'createdAt' })
   createdAt: Date;
 }
+
+export class AddCommentIdDto {
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ description: 'commentId' })
+  commentId: number;
+}
+
+export class RecommentDto extends IntersectionType(
+  CommentDto,
+  AddCommentIdDto,
+) {}
