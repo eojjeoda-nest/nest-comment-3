@@ -13,10 +13,13 @@ import {
 @Entity()
 export class CommentEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
-  commentId: number;
+  primaryCommentId: number;
 
   @Column()
   content: string;
+
+  @Column({ default: false })
+  isHide: boolean;
 
   // 여기서 relation 설정 어떻게 할지 고민해보기
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.comments)
