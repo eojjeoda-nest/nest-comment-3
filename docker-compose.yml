@@ -7,7 +7,7 @@ volumes:
 services:
   db:
     image: mysql/mysql-server:8.0
-    container_name: nest-dev-db
+    container_name: nest-dev-db3
     restart: always
     command:
       - --default-authentication-plugin=mysql_native_password

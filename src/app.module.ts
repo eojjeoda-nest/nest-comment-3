@@ -17,6 +17,9 @@ import { DataSource } from 'typeorm';
           password: process.env.DB_PASSWORD,
           database: process.env.DB_DATABASE,
           synchronize: process.env.DB_SYNC === 'true',
+          entities: ['dist/**/*.entity{.ts,.js}'],
+          migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+          migrationsRun: false,
           timezone: 'Z',
         };
       },
