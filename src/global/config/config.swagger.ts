@@ -8,8 +8,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
  */
 export function setupSwagger(app: INestApplication): void {
   const options = new DocumentBuilder()
-    .setTitle('nest-insta-story-2 API Docs')
-    .setDescription('nest-insta-story-2 API description')
+    .setTitle('nest-comment-3 API Docs')
+    .setDescription('nest-comment-3 API description')
     .setVersion('1.0.0')
     .build();
 
