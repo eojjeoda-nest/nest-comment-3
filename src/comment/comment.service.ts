@@ -23,7 +23,7 @@ export class CommentService {
   }
 
   async createRecomment(id: number, dto: RecommentDto) {
-    dto.commentId = id;
+    dto.parentId = id;
     const recomment: Comment = plainToInstance(Comment, dto);
     const result = await this.commentRepository.save(recomment);
     return plainToInstance(ResponseCommentDto, result);

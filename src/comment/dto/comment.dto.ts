@@ -59,8 +59,8 @@ export class ResponseCommentDto {
 export class AddCommentIdDto {
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({ description: 'commentId' })
-  commentId: number;
+  @ApiProperty({ description: 'parentId' })
+  parentId: number;
 }
 
 export class RecommentDto extends IntersectionType(

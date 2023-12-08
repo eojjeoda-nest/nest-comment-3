@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { CommentModule } from './comment/comment.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CommentModule } from './comment/comment.module';
           migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
           migrationsRun: false,
           timezone: 'Z',
+          logging: true,
         };
       },
       async dataSourceFactory(options) {
@@ -33,6 +35,7 @@ import { CommentModule } from './comment/comment.module';
       },
     }),
     CommentModule,
+    PostModule,
   ],
   controllers: [],
   providers: [],

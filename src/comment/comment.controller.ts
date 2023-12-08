@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import {
   CommentDto,
@@ -23,13 +23,13 @@ export class CommentController {
     return result;
   }
 
-  @Post(':id')
+  @Post(':commentId')
   @ApiOperation({ summary: '대댓글 생성 API' })
   @ApiCreatedResponse({
     description: '대댓글을 작성한다.',
     type: ResponseCommentDto,
   })
-  createRecomment(@Param('id') id: number, @Body() dto: RecommentDto) {
+  createRecomment(@Param('commentId') id: number, @Body() dto: RecommentDto) {
     const result = this.commentService.createRecomment(id, dto);
     return result;
   }

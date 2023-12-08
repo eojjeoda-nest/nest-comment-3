@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Post } from '../../post/entities/post.entity';
 
 @Entity()
 export class Comment {
@@ -28,13 +29,16 @@ export class Comment {
   @ApiProperty({ description: 'userId' })
   userId: number;
   @Column({ nullable: true })
-  @ApiProperty({ description: 'commentId' })
-  commentId: number;
+  @ApiProperty({ description: 'parentId' })
+  parentId: number;
   @ManyToOne(() => Comment, (comment) => comment.recomments)
-  @JoinColumn({ name: 'commentId' })
+  @JoinColumn({ name: 'parentId' })
   parent: Comment;
   @OneToMany(() => Comment, (comment) => comment.parent)
   recomments: Comment[];
+  @ManyToOne(() => Post, (post) => post.comments)
+  @JoinColumn({ name: 'postId' })
+  post: Post;
   @CreateDateColumn({
     type: 'timestamp',
   })
