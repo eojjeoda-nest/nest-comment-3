@@ -5,15 +5,11 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 
 export class CommentDto {
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(1000)
-  @ApiProperty({ description: 'content' })
-  content: string;
+  @ApiProperty({ description: 'id' })
+  id: number;
 
   @IsString()
   @IsNotEmpty()
@@ -21,6 +17,13 @@ export class CommentDto {
   @MaxLength(20)
   @ApiProperty({ description: 'writer' })
   writer: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(1000)
+  @ApiProperty({ description: 'content' })
+  content: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -31,7 +34,26 @@ export class CommentDto {
   @IsNotEmpty()
   @ApiProperty({ description: 'userId' })
   userId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ description: 'parentId' })
+  parentId: number;
 }
+
+class AddCreatedAt {
+  createdAt: Date;
+}
+
+export class PostCommentReq extends OmitType(CommentDto, [
+  'id',
+  'parentId',
+] as const) {}
+
+export class PostCommentRes extends IntersectionType(
+  CommentDto,
+  AddCreatedAt,
+) {}
 
 export class ResponseCommentDto {
   @ApiProperty({ description: 'id' })
@@ -55,15 +77,3 @@ export class ResponseCommentDto {
   @ApiProperty({ description: 'createdAt' })
   createdAt: Date;
 }
-
-export class AddCommentIdDto {
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty({ description: 'parentId' })
-  parentId: number;
-}
-
-export class RecommentDto extends IntersectionType(
-  CommentDto,
-  AddCommentIdDto,
-) {}

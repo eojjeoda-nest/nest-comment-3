@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -13,8 +13,12 @@ export class PostController {
     description: '해당 게시글에 달린 댓글들을 조회한다.',
     // type: ResponseCommentDto,
   })
-  findCommentsByPostId(@Param('postId') id: number) {
-    const result = this.postService.findCommentsByPostId(id);
+  findCommentsByPostId(
+    @Param('postId') id: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const result = this.postService.findCommentsByPostId(id, page, limit);
     return result;
   }
 }
