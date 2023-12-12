@@ -18,7 +18,6 @@ export class PostController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    const result = this.postService.findCommentsByPostId(id, page, limit);
-    return result;
+    return this.postService.findCommentsByPostId(id, page, limit);
   }
 }

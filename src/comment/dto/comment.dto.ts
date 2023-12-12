@@ -6,6 +6,8 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { PageDto } from '../../global/dto/page.dto';
+import { Comment } from '../entities/comment.entity';
 
 export class CommentDto {
   @ApiProperty({ description: 'id' })
@@ -45,6 +47,10 @@ class AddCreatedAt {
   createdAt: Date;
 }
 
+class AddRecomments {
+  recomments: Comment[];
+}
+
 export class PostCommentReq extends OmitType(CommentDto, [
   'id',
   'parentId',
@@ -52,28 +58,13 @@ export class PostCommentReq extends OmitType(CommentDto, [
 
 export class PostCommentRes extends IntersectionType(
   CommentDto,
+  AddRecomments,
   AddCreatedAt,
 ) {}
 
-export class ResponseCommentDto {
-  @ApiProperty({ description: 'id' })
-  id: number;
-
-  @ApiProperty({ description: 'content' })
-  content: string;
-
-  @ApiProperty({ description: 'writer' })
-  writer: string;
-
-  @ApiProperty({ description: 'commentId' })
-  commentId: number;
-
-  @ApiProperty({ description: 'postId' })
-  postId: number;
-
-  @ApiProperty({ description: 'userId' })
-  userId: number;
-
-  @ApiProperty({ description: 'createdAt' })
-  createdAt: Date;
+export class PostCommentPageRes {
+  @ApiProperty({ description: 'data' })
+  data: PostCommentRes[];
+  @ApiProperty({ description: 'meta' })
+  meta: PageDto;
 }

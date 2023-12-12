@@ -1,5 +1,10 @@
-import { PostCommentReq, PostCommentRes } from '../dto/comment.dto';
+import {
+  PostCommentPageRes,
+  PostCommentReq,
+  PostCommentRes,
+} from '../dto/comment.dto';
 import { Comment } from '../entities/comment.entity';
+import { PageDto } from '../../global/dto/page.dto';
 
 export class CommentMapper {
   toEntity(dto: PostCommentReq, id: number) {
@@ -11,6 +16,7 @@ export class CommentMapper {
     comment.parentId = id;
     return comment;
   }
+
   toPostCommentRes(entity: Comment) {
     const dto = new PostCommentRes();
     dto.id = entity.id;
@@ -20,6 +26,18 @@ export class CommentMapper {
     dto.userId = entity.userId;
     dto.parentId = entity.parentId;
     dto.createdAt = entity.createdAt;
+    dto.recomments = entity.recomments;
+    return dto;
+  }
+
+  toPostCommentPageRes(comments: Comment[], meta: PageDto) {
+    const dto = new PostCommentPageRes();
+    const postCommentRess: PostCommentRes[] = comments.map((comment) => {
+      return this.toPostCommentRes(comment);
+    });
+
+    dto.data = postCommentRess;
+    dto.meta = meta;
     return dto;
   }
 }
