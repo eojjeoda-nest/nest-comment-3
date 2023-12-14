@@ -106,6 +106,7 @@ export class CommentsService {
     });
 
     // total count 반환하려면, findAndCount 사용
+    // TODO: 숨김처리된 대댓글은 제외하고 가져오거 어떻게 하지? where 조건으로 걸어주면 되려나?
     const [comments, totalCount] =
       await this.commentEntityRepository.findAndCount({
         where: { post: postEntity, isHide: false },
@@ -147,4 +148,8 @@ export class CommentsService {
   //     excludePrefixes: ['deletedAt', 'updatedAt'],
   //   });
   // }
+
+  deleteComment(commentId: number) {
+    return this.commentEntityRepository.delete({ primaryCommentId: commentId });
+  }
 }

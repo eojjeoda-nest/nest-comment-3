@@ -39,10 +39,16 @@ export class CommentEntity extends CommonEntity {
   // @JoinColumn({ name: 'parentId' }) //
   // parent: CommentEntity;
 
-  @ManyToOne(() => CommentEntity, (comment: CommentEntity) => comment.children)
+  @ManyToOne(
+    () => CommentEntity,
+    (comment: CommentEntity) => comment.children,
+    { onDelete: 'CASCADE' },
+  )
   @JoinColumn({ name: 'parent' }) //
   parent: CommentEntity;
 
-  @OneToMany(() => CommentEntity, (comment: CommentEntity) => comment.parent)
+  @OneToMany(() => CommentEntity, (comment: CommentEntity) => comment.parent, {
+    cascade: true,
+  })
   children: CommentEntity[];
 }

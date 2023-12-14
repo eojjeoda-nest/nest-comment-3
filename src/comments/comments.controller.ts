@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateCommentRequestDto } from './dto/request.dto';
@@ -40,6 +48,12 @@ export class CommentsController {
     @Query('limit') limit: number,
   ) {
     return await this.commentsService.findAllPostComments(postId, page, limit);
+  }
+
+  //댓글 삭제 api
+  @Delete(':commentId')
+  deleteComment(@Param('commentId') commentId: number) {
+    return this.commentsService.deleteComment(commentId);
   }
 
   // TODO: 단일 조회 고민해보기
