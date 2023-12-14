@@ -6,7 +6,6 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { PostEntity } from 'src/posts/entities/post.entity';
 import { CreateCommentResponseDto } from './dto/response.dto';
 import { CreateCommentRequestDto } from './dto/request.dto';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CommentsService {
@@ -96,31 +95,26 @@ export class CommentsService {
     return data;
   }
 
-  async findAllPostComments(
-    postId: number,
-  ): Promise<CreateCommentResponseDto[]> {
+  async findAllPostComments(postId: number, page: number, limit: number) {
     const post = await this.postEntityRepository.findOne({
       where: { primaryPostId: postId },
-      relations: [
-        'user',
-        'comments',
-        'comments.children',
-        'comments.post',
-        'comments.user',
-      ],
     });
 
     // 이렇게 해줘야 가져옴, 왜 findOne으로 찾은 객체는 안되는걸까?
-    // const postEntity = this.postEntityRepository.create({
-    //   primaryPostId: post.primaryPostId,
-    // });
+    const postEntity = this.postEntityRepository.create({
+      primaryPostId: post.primaryPostId,
+    });
 
-    // const comments = await this.commentEntityRepository.find({
-    //   where: { post },
-    //   relations: ['children'], // Join 연산이 너무 많이 일어날 수 있음.
-    // });
+    // total count 반환하려면, findAndCount 사용
+    const [comments, totalCount] =
+      await this.commentEntityRepository.findAndCount({
+        where: { post: postEntity, isHide: false },
+        relations: ['children', 'post', 'user'], // Join 연산이 너무 많이 일어날 수 있음.
+        skip: (page - 1) * limit,
+        take: limit,
+      });
 
-    const data: CreateCommentResponseDto[] = post.comments?.map((comment) => {
+    const data: CreateCommentResponseDto[] = comments?.map((comment) => {
       return {
         commentId: comment.primaryCommentId,
         content: comment.content,
@@ -131,10 +125,14 @@ export class CommentsService {
       };
     });
 
-    console.log(data);
-    return plainToInstance(CreateCommentResponseDto, data, {
-      excludePrefixes: ['deletedAt', 'updatedAt'],
-    });
+    const pageDate = {
+      content: data,
+      page: page,
+      limit: limit,
+      totalPage: Math.ceil(totalCount / limit),
+    };
+
+    return pageDate;
   }
 
   // TODO: 단일 조회 고려하기

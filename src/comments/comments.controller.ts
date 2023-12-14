@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateCommentRequestDto } from './dto/request.dto';
@@ -34,8 +34,12 @@ export class CommentsController {
 
   // POST 에 관한 댓글 조회인데 여기다가 하는거 맞겠지?
   @Get('post/:postId')
-  async findAllPostComments(@Param('postId') postId: number) {
-    return await this.commentsService.findAllPostComments(postId);
+  async findAllPostComments(
+    @Param('postId') postId: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return await this.commentsService.findAllPostComments(postId, page, limit);
   }
 
   // TODO: 단일 조회 고민해보기
