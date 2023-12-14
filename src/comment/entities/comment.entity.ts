@@ -9,7 +9,7 @@ import { CommonEntity } from '../../common/entity/common.entity';
 import { Post } from './post.entity';
 
 /*
-1. 작성자1~20글자 사이
+1. 작성자1~20글자 사이x
 2. 내용 1~1000자 사이
 3. 신고 수 (10번 이상 신고시 숨김처리, 중복 신고 불가)
 4, 좋아요 수
@@ -27,18 +27,18 @@ export class Comment extends CommonEntity {
   @Column()
   content: string;
 
-  // 신고자
+  @Column({ default: false })
+  isHidden: boolean;
 
-  //좋아요
-
-  @ManyToOne(() => Post, (post) => post.comments, { lazy: true })
+  @Column()
+  @ManyToOne(() => Post, (post) => post.comments)
   post: Post;
 
   // 인접리스트 자기참조
-  @ManyToOne(() => Comment, (category) => category.children, { lazy: true })
+  @ManyToOne(() => Comment, (category) => category.children)
   parent: Comment;
 
-  @OneToMany(() => Comment, (category) => category.parent, { lazy: true })
+  @OneToMany(() => Comment, (category) => category.parent)
   children: Comment[];
 
   static of(post: Post, partial: Partial<Comment>): Comment {

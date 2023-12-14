@@ -20,6 +20,7 @@ import { CommentModule } from './comment/comment.module';
           synchronize: process.env.DB_SYNC === 'true',
           timezone: 'Z',
           entities: ['dist/**/*.entity{.ts,.js}'],
+          logging: true,
         };
       },
       async dataSourceFactory(options) {

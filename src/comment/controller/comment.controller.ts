@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CommentService } from '../service/comment.service';
-import { CommentCreateDto } from '../dto/comment-create.dto';
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
+import { Comment } from '../entities/comment.entity';
+import { CommentGetDto } from '../dto/comment-get.dto';
+import { Page } from '../../common/dto/page-response.dto';
 
 @Controller('/api/v1/comments')
 export class CommentController {
@@ -19,7 +21,19 @@ export class CommentController {
   @Post()
   async create(@Body() commentCreateDto: PostCommentCreateDto) {
     await this.commentService.create(commentCreateDto);
-    89;
     return;
   }
+
+  // 댓글 조회 api
+  @Get()
+  async findAll(@Query() page: CommentGetDto) {
+    const total = await Comment.count();
+    const comments = await Comment.find({
+      take: page.getLimit(),
+      skip: page.getOffset(),
+    });
+    return new Page(total, page.pageSize, comments);
+  }
+
+  //
 }
