@@ -13,7 +13,7 @@ export class ErrorResponse {
     if (typeof exceptionResponse === 'string') {
       return exceptionResponse;
     } else {
-      return exceptionResponse['message'][0];
+      return exceptionResponse['message']; // validationpipe option 설정에 따라 다름 => stopAtFirstError: true,
     }
   }
 

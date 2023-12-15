@@ -5,7 +5,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 import { COMMENT_VALIDATION_CONSTANTS } from '../constants';
 
 export class CommentDto extends IntersectionType(
-  PickType(UserDto, ['userId']),
+  PickType(UserDto, ['primaryUserId']),
   PickType(PostDto, ['primaryPostId']),
 ) {
   @ApiProperty({

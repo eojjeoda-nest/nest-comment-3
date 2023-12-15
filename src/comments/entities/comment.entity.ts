@@ -10,6 +10,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 
 @Entity()
@@ -30,12 +31,18 @@ export class CommentEntity extends CommonEntity {
   reportCount: number;
 
   // 여기서 relation 설정 어떻게 할지 고민해보기
+  @Column({ nullable: true })
+  @RelationId((comment: CommentEntity) => comment.user)
+  primaryUserId: number;
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.comments)
-  @JoinColumn({ name: 'user' })
+  @JoinColumn({ name: 'primaryUserId' })
   user: UserEntity;
 
+  @Column({ nullable: true })
+  @RelationId((comment: CommentEntity) => comment.post)
+  primaryPostId: number;
   @ManyToOne(() => PostEntity, (post: PostEntity) => post.comments)
-  @JoinColumn({ name: 'post' })
+  @JoinColumn({ name: 'primaryPostId' })
   post: PostEntity;
 
   //TODO: 1번 방법
@@ -47,12 +54,15 @@ export class CommentEntity extends CommonEntity {
   // @JoinColumn({ name: 'parentId' }) //
   // parent: CommentEntity;
 
+  @Column({ nullable: true })
+  @RelationId((comment: CommentEntity) => comment.parent)
+  primaryParentId: number;
   @ManyToOne(
     () => CommentEntity,
     (comment: CommentEntity) => comment.children,
     { onDelete: 'CASCADE' },
   )
-  @JoinColumn({ name: 'parent' }) //
+  @JoinColumn({ name: 'primaryParentId' }) //
   parent: CommentEntity;
 
   @OneToMany(() => CommentEntity, (comment: CommentEntity) => comment.parent, {

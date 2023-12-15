@@ -21,6 +21,7 @@ export class UsersService {
 
     // TODO: 이 부분을 class-transformer를 사용해서 자동으로 변환해주는지 확인
     const data: CreateUserResponseDto = {
+      primaryUserId: savedUserEntity.primaryUserId,
       userId: savedUserEntity.userId,
     };
 

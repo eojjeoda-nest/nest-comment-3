@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentReportRequestDto } from './dto/request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -19,44 +19,42 @@ export class CommentReportsService {
   ) {}
   async create(
     CreateCommentReportRequestDto: CreateCommentReportRequestDto,
-    commentId: number,
+    primaryCommentId: number,
   ) {
-    const { reportReason, userId } = CreateCommentReportRequestDto;
+    const { reportReason, primaryUserId } = CreateCommentReportRequestDto;
 
-    const userEntity = await this.userEntityRepository.findOne({
-      where: { userId },
+    const userExistValue = await this.userEntityRepository.exist({
+      where: {
+        primaryUserId,
+      },
+    });
+    if (!userExistValue) new NotFoundException('존재하지 않는 유저입니다.');
+
+    const commentExistValue = await this.commentEntityRepository.exist({
+      where: {
+        primaryCommentId: primaryCommentId,
+      },
+    });
+    if (!commentExistValue) new NotFoundException('존재하지 않는 댓글입니다.');
+
+    const commentReport = await this.commentReportEntityRepository.findOne({
+      where: {
+        primaryCommentId,
+        primaryUserId,
+      },
     });
 
-    const createUserEntity = this.userEntityRepository.create({
-      userId: userEntity.userId,
-    });
-
-    const commentEntity = await this.commentEntityRepository.findOne({
-      where: { primaryCommentId: commentId },
-    });
-
-    const createCommentEntity = this.commentEntityRepository.create({
-      primaryCommentId: commentEntity.primaryCommentId,
-    });
-
-    const commentReportEntity =
-      await this.commentReportEntityRepository.findOne({
-        where: {
-          reportComment: createCommentEntity,
-          reportUser: createUserEntity,
-        },
-      });
-
-    if (commentReportEntity === null) {
-      const newCommentReportEntity = this.commentReportEntityRepository.create({
+    if (commentReport === null) {
+      const newCommentReport = this.commentReportEntityRepository.create({
         isReport: true,
         reportReason: reportReason,
-        reportUser: userEntity,
-        reportComment: commentEntity,
+        primaryUserId,
+        primaryCommentId,
       });
 
       const comment = await this.commentEntityRepository.findOne({
-        where: { primaryCommentId: commentId },
+        where: { primaryCommentId },
+        relations: ['user'],
       });
 
       comment.reportCount += 1;
@@ -65,29 +63,30 @@ export class CommentReportsService {
 
       await this.commentEntityRepository.save(comment);
 
-      const saved = await this.commentReportEntityRepository.save(
-        newCommentReportEntity,
-      );
+      const savedCommentReport =
+        await this.commentReportEntityRepository.save(newCommentReport);
 
       const data: CreateCommentReportResponseDto = {
-        userId: userId,
-        primaryCommentId: commentId,
-        isReport: saved.isReport,
-        reportReason: saved.reportReason,
+        userId: comment.user.userId,
+        primaryCommentId,
+        primaryUserId,
+        isReport: savedCommentReport.isReport,
+        reportReason: savedCommentReport.reportReason,
       };
 
       return data;
     } else {
-      if (commentReportEntity.isReport === true) {
+      if (commentReport.isReport === true) {
         return '이미 신고한 댓글입니다.';
       } else {
-        commentReportEntity.isReport = true;
-        commentReportEntity.reportReason = reportReason;
-        const saved =
-          await this.commentReportEntityRepository.save(commentReportEntity);
+        commentReport.isReport = true;
+        commentReport.reportReason = reportReason;
+        const savedCommentReport =
+          await this.commentReportEntityRepository.save(commentReport);
 
         const comment = await this.commentEntityRepository.findOne({
-          where: { primaryCommentId: commentId },
+          where: { primaryCommentId: primaryCommentId },
+          relations: ['user'],
         });
 
         comment.reportCount += 1;
@@ -97,30 +96,15 @@ export class CommentReportsService {
         await this.commentEntityRepository.save(comment);
 
         const data: CreateCommentReportResponseDto = {
-          userId: userId,
-          primaryCommentId: commentId,
-          isReport: saved.isReport,
-          reportReason: saved.reportReason,
+          userId: comment.user.userId,
+          primaryCommentId,
+          primaryUserId,
+          isReport: savedCommentReport.isReport,
+          reportReason: savedCommentReport.reportReason,
         };
 
         return data;
       }
     }
-
-    // findAll() {
-    //   return `This action returns all commentReports`;
-    // }
-
-    // findOne(id: number) {
-    //   return `This action returns a #${id} commentReport`;
-    // }
-
-    // update(id: number, updateCommentReportDto: UpdateCommentReportDto) {
-    //   return `This action updates a #${id} commentReport`;
-    // }
-
-    // remove(id: number) {
-    //   return `This action removes a #${id} commentReport`;
-    // }
   }
 }

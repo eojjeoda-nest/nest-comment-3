@@ -36,15 +36,15 @@ export class CommentLikesController {
   //   type: CreateCommentLikeRequestDto,
   //   description: '댓글/대댓글 좋아요 누르기 요청 DTO',
   // })
-  @Post(':commentId')
-  create(
-    @Param('commentId') commentId: number,
+  @Post(':primaryCommentId')
+  async create(
+    @Param('primaryCommentId') primaryCommentId: number,
     @Body() createCommentLikeRequestDto: CreateCommentLikeRequestDto,
   ) {
     // TODO: 반환 타입 지정 안해도 될까? 하는게 좋을까?
-    return this.commentLikesService.create(
+    return await this.commentLikesService.create(
       createCommentLikeRequestDto,
-      commentId,
+      primaryCommentId,
     );
   }
 }

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCommentLikeRequestDto } from './dto/request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentLikeEntity } from './entities/comment-like.entity';
@@ -19,48 +23,47 @@ export class CommentLikesService {
   ) {}
   async create(
     createCommentLikeRequestDto: CreateCommentLikeRequestDto,
-    commentId: number,
+    primaryCommentId: number,
   ) {
-    const { userId } = createCommentLikeRequestDto;
+    const { primaryUserId } = createCommentLikeRequestDto;
 
-    // 댓글좋아요 테이블에서 있는지 확인
-    const userEntity = await this.userEntityRepository.findOne({
-      where: { userId },
+    const userExistValue = await this.userEntityRepository.exist({
+      where: {
+        primaryUserId,
+      },
     });
+    if (!userExistValue) new NotFoundException('존재하지 않는 유저입니다.');
 
-    const createUserEntity = this.userEntityRepository.create({
-      userId: userEntity.userId,
+    const commentExistValue = await this.commentEntityRepository.exist({
+      where: {
+        primaryCommentId: primaryCommentId,
+      },
     });
+    if (!commentExistValue) new NotFoundException('존재하지 않는 댓글입니다.');
 
-    const commentEntity = await this.commentEntityRepository.findOne({
-      where: { primaryCommentId: commentId },
-    });
+    console.log(primaryCommentId, primaryUserId);
 
-    const createCommentEntity = this.commentEntityRepository.create({
-      primaryCommentId: commentEntity.primaryCommentId,
-    });
-
-    const commentLikeEntity = await this.commentLikeEntityRepository.findOne({
-      where: { comment: createCommentEntity, user: createUserEntity },
+    const commentLike = await this.commentLikeEntityRepository.findOne({
+      where: { primaryCommentId, primaryUserId },
     });
 
     // 없으면 댓글좋아요 테이블에 유저 추가
-    if (commentLikeEntity === null) {
+    if (commentLike === null) {
       const newCommentLikeEntity = this.commentLikeEntityRepository.create({
         isLike: true,
-        user: userEntity,
-        comment: commentEntity,
+        primaryUserId,
+        primaryCommentId,
       });
       await this.commentLikeEntityRepository.save(newCommentLikeEntity);
 
+      // TODO: 중복 어떻게 줄이는게 좋을까?
       const comment = await this.commentEntityRepository.findOne({
-        where: { primaryCommentId: commentId },
+        where: { primaryCommentId },
       });
-
       comment.likeCount += 1;
-
       await this.commentEntityRepository.save(comment);
 
+      // TODO: 반환 값 어떻게 관리하는게 좋을까?
       const data: CreateCommentLikeResponseDto = {
         primaryCommentId: newCommentLikeEntity.comment.primaryCommentId,
         isLike: newCommentLikeEntity.isLike,
@@ -70,44 +73,27 @@ export class CommentLikesService {
     }
     // 있으면 likeCount 값 확인
     else {
-      if (commentLikeEntity.isLike === true) {
-        return '이미 좋아요를 누른 상태입니다.';
-      } else {
+      if (commentLike.isLike === true)
+        throw new BadRequestException('이미 좋아요를 누른 댓글입니다.');
+      else {
         // TODO: 이런건 하나만 실패해도 롤백되어야 할 것 같은데? 순서를 바꾸면 되긴 하지만 다른 상황일 때 생각해보자
-        commentLikeEntity.isLike = true;
-        await this.commentLikeEntityRepository.save(commentLikeEntity);
+        commentLike.isLike = true;
+        await this.commentLikeEntityRepository.save(commentLike);
 
+        // TODO: 중복 어떻게 줄이는게 좋을까?
         const comment = await this.commentEntityRepository.findOne({
-          where: { primaryCommentId: commentId },
+          where: { primaryCommentId },
         });
-
         comment.likeCount += 1;
-
         await this.commentEntityRepository.save(comment);
 
         const data: CreateCommentLikeResponseDto = {
-          primaryCommentId: commentId,
-          isLike: commentLikeEntity.isLike,
+          primaryCommentId: primaryCommentId,
+          isLike: commentLike.isLike,
         };
 
         return data;
       }
     }
   }
-
-  // findAll() {
-  //   return `This action returns all commentLikes`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} commentLike`;
-  // }
-
-  // update(id: number, updateCommentLikeDto: UpdateCommentLikeDto) {
-  //   return `This action updates a #${id} commentLike`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} commentLike`;
-  // }
 }

@@ -4,7 +4,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 import { CommentReportDto } from './comment-report.dto';
 
 export class CreateCommentReportResponseDto extends IntersectionType(
-  PickType(UserDto, ['userId']),
+  PickType(UserDto, ['userId', 'primaryUserId']),
   PickType(CommentDto, ['primaryCommentId']),
   PickType(CommentReportDto, ['isReport', 'reportReason']),
 ) {}

@@ -14,7 +14,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      whitelist: true,
+      // whitelist: true, //TODO: controller에서 서비스로 쿼리파람 인자 전달하면 undefined로 넘어가는 문제
       stopAtFirstError: true,
     }),
   );

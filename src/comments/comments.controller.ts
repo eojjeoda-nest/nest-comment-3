@@ -113,6 +113,4 @@ export class CommentsController {
   deleteComment(@Param('commentId') commentId: number) {
     return this.commentsService.deleteComment(commentId);
   }
-
-  // TODO: 단일 조회 고민해보기
 }

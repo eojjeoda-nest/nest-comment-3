@@ -3,7 +3,7 @@ import { CommentDto } from 'src/comments/dto/comment.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 
 export class CommentReportDto extends IntersectionType(
-  PickType(UserDto, ['userId']),
+  PickType(UserDto, ['primaryUserId']),
   PickType(CommentDto, ['primaryCommentId']),
 ) {
   primaryCommentReportId: number;

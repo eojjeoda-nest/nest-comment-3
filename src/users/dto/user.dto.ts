@@ -3,6 +3,12 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UserDto {
   @ApiProperty({
+    example: '1',
+    description: '유저 고유번호',
+  })
+  primaryUserId: number;
+
+  @ApiProperty({
     example: 'testId',
     description: '유저 아이디',
     required: true,
