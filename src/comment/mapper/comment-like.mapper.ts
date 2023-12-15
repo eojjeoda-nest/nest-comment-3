@@ -1,4 +1,7 @@
-import { PostCommentLikeReq, PostCommentLikeRes } from '../dto/commentLike.dto';
+import {
+  PostCommentLikeReq,
+  PostCommentLikeRes,
+} from '../dto/comment-like.dto';
 import { CommentLike } from '../entities/comment-like.entity';
 
 export class CommentLikeMapper {
