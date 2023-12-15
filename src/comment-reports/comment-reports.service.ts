@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { CommentEntity } from 'src/comments/entities/comment.entity';
 import { CommentReportEntity } from './entities/comment-report.entity';
 import { CreateCommentReportResponseDto } from './dto/response.dto';
+import { MAX_REPORT_COUNT } from './constants';
 
 @Injectable()
 export class CommentReportsService {
@@ -59,7 +60,7 @@ export class CommentReportsService {
 
       comment.reportCount += 1;
 
-      if (comment.reportCount >= 10) comment.isHide = true;
+      if (comment.reportCount >= MAX_REPORT_COUNT) comment.isHide = true;
 
       await this.commentEntityRepository.save(comment);
 
@@ -91,7 +92,7 @@ export class CommentReportsService {
 
         comment.reportCount += 1;
 
-        if (comment.reportCount >= 10) comment.isHide = true;
+        if (comment.reportCount >= MAX_REPORT_COUNT) comment.isHide = true;
 
         await this.commentEntityRepository.save(comment);
 
