@@ -7,6 +7,7 @@ import { CommentsModule } from './comments/comments.module';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentLikesModule } from './comment-likes/comment-likes.module';
+import { CommentReportsModule } from './comment-reports/comment-reports.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CommentLikesModule } from './comment-likes/comment-likes.module';
     UsersModule,
     PostsModule,
     CommentLikesModule,
+    CommentReportsModule,
   ],
   controllers: [],
   providers: [],

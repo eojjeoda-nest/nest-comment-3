@@ -1,4 +1,5 @@
 import { CommentLikeEntity } from 'src/comment-likes/entities/comment-like.entity';
+import { CommentReportEntity } from 'src/comment-reports/entities/comment-report.entity';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { PostEntity } from 'src/posts/entities/post.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -24,6 +25,9 @@ export class CommentEntity extends CommonEntity {
 
   @Column({ default: 0 })
   likeCount: number;
+
+  @Column({ default: 0 })
+  reportCount: number;
 
   // 여기서 relation 설정 어떻게 할지 고민해보기
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.comments)
@@ -61,4 +65,10 @@ export class CommentEntity extends CommonEntity {
     (commentLike: CommentLikeEntity) => commentLike.comment,
   )
   commentLikes: CommentLikeEntity[];
+
+  @OneToMany(
+    () => CommentReportEntity,
+    (commentReport: CommentReportEntity) => commentReport.reportComment,
+  )
+  commentReports: CommentReportEntity[];
 }

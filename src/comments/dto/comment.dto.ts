@@ -34,4 +34,10 @@ export class CommentDto extends IntersectionType(
     description: '댓글 좋아요 수',
   })
   likeCount: number;
+
+  @ApiProperty({
+    example: 0,
+    description: '댓글 신고 수',
+  })
+  reportCount: number;
 }

@@ -5,4 +5,5 @@ export class CreateCommentRequestDto extends OmitType(CommentDto, [
   'commentId',
   'isHide',
   'likeCount',
+  'reportCount',
 ]) {}

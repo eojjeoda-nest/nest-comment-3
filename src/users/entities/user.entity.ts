@@ -1,4 +1,5 @@
 import { CommentLikeEntity } from 'src/comment-likes/entities/comment-like.entity';
+import { CommentReportEntity } from 'src/comment-reports/entities/comment-report.entity';
 import { CommentEntity } from 'src/comments/entities/comment.entity';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { PostEntity } from 'src/posts/entities/post.entity';
@@ -24,4 +25,7 @@ export class UserEntity extends CommonEntity {
 
   @OneToMany(() => CommentLikeEntity, (commentLike) => commentLike.user)
   commentLikes: CommentLikeEntity[];
+
+  @OneToMany(() => CommentReportEntity, (report) => report.reportUser)
+  commentReports: CommentReportEntity[];
 }
