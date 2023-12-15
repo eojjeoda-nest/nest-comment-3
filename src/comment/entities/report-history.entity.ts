@@ -1,5 +1,6 @@
 import { CommonEntity } from '../../common/entity/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Entity('report_histories')
 export class ReportHistory extends CommonEntity {
@@ -11,6 +12,9 @@ export class ReportHistory extends CommonEntity {
 
   @Column()
   commentId: number;
+
+  @ManyToOne(() => Comment, (comment) => comment.reportHistories)
+  comment: Comment;
 
   static of(ip: string, commentId: number): ReportHistory {
     const reportHistory = new ReportHistory();

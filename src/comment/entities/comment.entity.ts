@@ -8,6 +8,8 @@ import {
 import { CommonEntity } from '../../common/entity/common.entity';
 import { Post } from './post.entity';
 import { CommentGetDto } from '../dto/comment-get.dto';
+import { LikeHistory } from './like-history.entity';
+import { ReportHistory } from './report-history.entity';
 
 /*
 1. 작성자1~20글자 사이x
@@ -45,6 +47,12 @@ export class Comment extends CommonEntity {
   })
   children: Comment[];
 
+  @OneToMany(() => LikeHistory, (likeHistory) => likeHistory.comment)
+  likeHistories: LikeHistory[];
+
+  @OneToMany(() => ReportHistory, (reportHistory) => reportHistory.comment)
+  reportHistories: ReportHistory[];
+
   static of(post: Post, partial: Partial<Comment>): Comment {
     const comment = new Comment();
     comment.post = post;
@@ -68,17 +76,34 @@ export class Comment extends CommonEntity {
 
   static async findAllComments(page: CommentGetDto) {
     const query = Comment.createQueryBuilder('comment')
+      .select([
+        'comment.id',
+        'comment.author',
+        'comment.content',
+        'comment.isHidden',
+        'comment.createdAt',
+        'comment.updatedAt',
+        'COUNT(likeHistory.id) AS likeCount', // 좋아요 횟수
+        'COUNT(reportHistory.id) AS reportCount', // 신고 횟수
+      ])
       .where('comment.isHidden = :isHidden', { isHidden: false })
+      .leftJoin(
+        'comment.likeHistories',
+        'likeHistory',
+        'likeHistory.commentId = comment.id',
+        { isHidden: false },
+      )
+      .leftJoin(
+        'comment.reportHistories',
+        'reportHistory',
+        'reportHistory.commentId = comment.id',
+        { isHidden: false },
+      )
+      .groupBy('comment.id')
       .orderBy('comment.createdAt', 'DESC')
       .take(page.getLimit())
-      .skip(page.getOffset())
-      .leftJoinAndMapMany(
-        'comment.children',
-        Comment,
-        'children',
-        'children.parentId = comment.id',
-      );
+      .skip(page.getOffset());
 
-    return await query.getMany();
+    return await query.getRawMany();
   }
 }
