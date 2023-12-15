@@ -26,7 +26,9 @@ export class CommentLike {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.like)
+  @ManyToOne(() => Comment, (comment) => comment.like, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'commentId' })
   comment: Comment;
 }

@@ -49,7 +49,9 @@ export class Comment {
   })
   recomments: Comment[];
 
-  @OneToMany(() => CommentLike, (commentLike) => commentLike.comment)
+  @OneToMany(() => CommentLike, (commentLike) => commentLike.comment, {
+    cascade: true,
+  })
   like: CommentLike[];
 
   @ManyToOne(() => Post, (post) => post.comments)
