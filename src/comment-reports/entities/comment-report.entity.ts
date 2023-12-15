@@ -15,9 +15,13 @@ export class CommentReportEntity extends OmitType(CommonEntity, ['deletedAt']) {
   @Column()
   reportReason: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.commentReports)
+  @ManyToOne(() => UserEntity, (user) => user.commentReports, {
+    onDelete: 'CASCADE',
+  })
   reportUser: UserEntity;
 
-  @ManyToOne(() => CommentEntity, (comment) => comment.commentReports)
+  @ManyToOne(() => CommentEntity, (comment) => comment.commentReports, {
+    onDelete: 'CASCADE',
+  })
   reportComment: CommentEntity;
 }

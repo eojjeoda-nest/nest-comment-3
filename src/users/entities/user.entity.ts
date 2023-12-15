@@ -23,9 +23,13 @@ export class UserEntity extends CommonEntity {
   @OneToMany(() => CommentEntity, (comment) => comment.user)
   comments: CommentEntity[];
 
-  @OneToMany(() => CommentLikeEntity, (commentLike) => commentLike.user)
+  @OneToMany(() => CommentLikeEntity, (commentLike) => commentLike.user, {
+    cascade: true,
+  })
   commentLikes: CommentLikeEntity[];
 
-  @OneToMany(() => CommentReportEntity, (report) => report.reportUser)
+  @OneToMany(() => CommentReportEntity, (report) => report.reportUser, {
+    cascade: true,
+  })
   commentReports: CommentReportEntity[];
 }

@@ -15,9 +15,13 @@ export class CommentLikeEntity extends PickType(CommonEntity, [
   @Column()
   isLike: boolean;
 
-  @ManyToOne(() => UserEntity, (user) => user.commentLikes)
+  @ManyToOne(() => UserEntity, (user) => user.commentLikes, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
-  @ManyToOne(() => CommentEntity, (comment) => comment.commentLikes)
+  @ManyToOne(() => CommentEntity, (comment) => comment.commentLikes, {
+    onDelete: 'CASCADE',
+  })
   comment: CommentEntity;
 }

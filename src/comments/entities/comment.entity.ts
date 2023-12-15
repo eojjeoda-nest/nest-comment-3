@@ -63,12 +63,16 @@ export class CommentEntity extends CommonEntity {
   @OneToMany(
     () => CommentLikeEntity,
     (commentLike: CommentLikeEntity) => commentLike.comment,
+    {
+      cascade: true,
+    },
   )
   commentLikes: CommentLikeEntity[];
 
   @OneToMany(
     () => CommentReportEntity,
     (commentReport: CommentReportEntity) => commentReport.reportComment,
+    { cascade: true },
   )
   commentReports: CommentReportEntity[];
 }
