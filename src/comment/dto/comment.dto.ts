@@ -68,3 +68,11 @@ export class PostCommentPageRes {
   @ApiProperty({ description: 'meta' })
   meta: PageDto;
 }
+
+export class DeleteCommentRes {
+  @ApiProperty({ description: 'status' })
+  status: number;
+
+  @ApiProperty({ description: 'message' })
+  message: string;
+}

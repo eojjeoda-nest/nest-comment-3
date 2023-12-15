@@ -1,4 +1,5 @@
 import {
+  DeleteCommentRes,
   PostCommentPageRes,
   PostCommentReq,
   PostCommentRes,
@@ -38,6 +39,13 @@ export class CommentMapper {
 
     dto.data = postCommentRess;
     dto.meta = meta;
+    return dto;
+  }
+
+  toDeleteCommentRes(status: number, message: string) {
+    const dto = new DeleteCommentRes();
+    dto.status = status;
+    dto.message = message;
     return dto;
   }
 }
