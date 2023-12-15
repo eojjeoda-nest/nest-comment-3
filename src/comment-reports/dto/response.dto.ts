@@ -1,10 +1,10 @@
 import { IntersectionType, PickType } from '@nestjs/swagger';
-import { CommentReportEntity } from '../entities/comment-report.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { CommentEntity } from 'src/comments/entities/comment.entity';
+import { CommentDto } from 'src/comments/dto/comment.dto';
+import { UserDto } from 'src/users/dto/user.dto';
+import { CommentReportDto } from './comment-report.dto';
 
 export class CreateCommentReportResponseDto extends IntersectionType(
-  PickType(UserEntity, ['userId']),
-  PickType(CommentEntity, ['primaryCommentId']),
-  PickType(CommentReportEntity, ['isReport', 'reportReason']),
+  PickType(UserDto, ['userId']),
+  PickType(CommentDto, ['primaryCommentId']),
+  PickType(CommentReportDto, ['isReport', 'reportReason']),
 ) {}

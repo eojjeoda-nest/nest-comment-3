@@ -12,7 +12,7 @@ export class CommentDto extends IntersectionType(
     example: 1,
     description: '댓글 ID',
   })
-  commentId: number;
+  primaryCommentId: number;
 
   @ApiProperty({
     example: '댓글 내용',

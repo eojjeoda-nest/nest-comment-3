@@ -62,7 +62,7 @@ export class CommentLikesService {
       await this.commentEntityRepository.save(comment);
 
       const data: CreateCommentLikeResponseDto = {
-        commentId: newCommentLikeEntity.comment.primaryCommentId,
+        primaryCommentId: newCommentLikeEntity.comment.primaryCommentId,
         isLike: newCommentLikeEntity.isLike,
       };
 
@@ -86,7 +86,7 @@ export class CommentLikesService {
         await this.commentEntityRepository.save(comment);
 
         const data: CreateCommentLikeResponseDto = {
-          commentId: commentId,
+          primaryCommentId: commentId,
           isLike: commentLikeEntity.isLike,
         };
 

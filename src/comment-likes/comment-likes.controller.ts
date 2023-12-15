@@ -1,52 +1,50 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { CommentLikesService } from './comment-likes.service';
 import { CreateCommentLikeRequestDto } from './dto/request.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CreateCommentLikeResponseDto } from './dto/response.dto';
 
-@ApiTags('댓글 좋아요 관련 API')
+@ApiTags('댓글/대댓글 좋아요 관련 API')
 @Controller('comment-likes')
 export class CommentLikesController {
   constructor(private readonly commentLikesService: CommentLikesService) {}
 
+  @ApiOperation({
+    summary: '좋아요 누르기 API',
+    description: '댓글/대댓글 좋아요 누르기',
+  })
+  @ApiOkResponse({
+    description: '좋아요 누르기 성공',
+    type: CreateCommentLikeResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: '좋아요가 이미 눌러져 있을 경우',
+    // type: Error, //TODO: 에러에 대한 타입을 따로 정의해야 할까?
+  })
+  @ApiParam({
+    name: 'commentId',
+    description: '댓글/대댓글 아이디',
+    required: true,
+  })
+  // @ApiBody({ // TODO: body에 들어가는 값을 따로 명세를 안해줘도 괜찮을까?
+  //   type: CreateCommentLikeRequestDto,
+  //   description: '댓글/대댓글 좋아요 누르기 요청 DTO',
+  // })
   @Post(':commentId')
   create(
     @Param('commentId') commentId: number,
     @Body() createCommentLikeRequestDto: CreateCommentLikeRequestDto,
   ) {
+    // TODO: 반환 타입 지정 안해도 될까? 하는게 좋을까?
     return this.commentLikesService.create(
       createCommentLikeRequestDto,
       commentId,
     );
   }
-
-  // @Get()
-  // findAll() {
-  //   return this.commentLikesService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.commentLikesService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateCommentLikeDto: UpdateCommentLikeDto,
-  // ) {
-  //   return this.commentLikesService.update(+id, updateCommentLikeDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.commentLikesService.remove(+id);
-  // }
 }

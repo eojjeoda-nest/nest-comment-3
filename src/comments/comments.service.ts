@@ -42,7 +42,7 @@ export class CommentsService {
       await this.commentEntityRepository.save(commentEntity);
 
     const data: CreateCommentResponseDto = {
-      commentId: savedCommentEntity.primaryCommentId,
+      primaryCommentId: savedCommentEntity.primaryCommentId,
       content: savedCommentEntity.content,
       userId: savedCommentEntity.user.userId,
       primaryPostId: savedCommentEntity.post.primaryPostId,
@@ -86,7 +86,7 @@ export class CommentsService {
       await this.commentEntityRepository.save(recommentEntity);
 
     const data: CreateCommentResponseDto = {
-      commentId: savedRecommentEntity.primaryCommentId,
+      primaryCommentId: savedRecommentEntity.primaryCommentId,
       content: savedRecommentEntity.content,
       userId: savedRecommentEntity.user.userId,
       primaryPostId: savedRecommentEntity.post.primaryPostId,
@@ -119,7 +119,7 @@ export class CommentsService {
 
     const data: CreateCommentResponseDto[] = comments?.map((comment) => {
       return {
-        commentId: comment.primaryCommentId,
+        primaryCommentId: comment.primaryCommentId,
         content: comment.content,
         primaryPostId: comment.post.primaryPostId,
         userId: comment.user.userId,

@@ -4,7 +4,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 
 export class CommentLikeDto extends IntersectionType(
   PickType(UserDto, ['userId']),
-  PickType(CommentDto, ['commentId']),
+  PickType(CommentDto, ['primaryCommentId']),
 ) {
   primaryCommentLikeId: number;
 
