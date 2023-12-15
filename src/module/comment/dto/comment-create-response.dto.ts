@@ -4,5 +4,7 @@ export class CommentCreateResponseDto{
 
     boardId: number;
 
+    depth: number;
+
     creatorId: number;
 }

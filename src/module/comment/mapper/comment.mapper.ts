@@ -5,11 +5,12 @@ import { CommentCreateDto } from "../dto/comment-create.dto";
 import { Comment } from "../entity/comment.entity";
 
 export class CommentMapper{
-    DtoToEntity({content}:CommentCreateDto, creator: User, board: Board): Comment{
+    DtoToEntity({content}:CommentCreateDto, creator: User, board: Board, defaultDepth: number): Comment{
         const comment = new Comment();
         comment.content = content;
         comment.creator = creator;
         comment.board = board;
+        comment.depth = defaultDepth;
 
         return comment;
     }
@@ -18,7 +19,8 @@ export class CommentMapper{
         return {
             content: comment.content,
             creatorId: comment.creator.id,
-            boardId: comment.board.id
+            boardId: comment.board.id,
+            depth: comment.depth
         }
     }
 }

@@ -29,7 +29,8 @@ export class CommentService {
         if(!board){
             throw new NotFoundBoardException();
         }
-        const newCommentEntity = this.commentMapper.DtoToEntity(commentCreateDto, creator, board);
+        const defaultDepth = 0;
+        const newCommentEntity = this.commentMapper.DtoToEntity(commentCreateDto, creator, board, defaultDepth);
         return await this.commentRepository.save(newCommentEntity);
     }
 }
