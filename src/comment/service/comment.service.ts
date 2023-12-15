@@ -4,12 +4,14 @@ import { Post } from '../entities/post.entity';
 import { Comment } from '../entities/comment.entity';
 import {
   CommentNotFondException,
+  DuplicatedCommentLikeException,
   DuplicatedCommentReportException,
 } from '../../common/error/exceptions/comment.exception';
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
 import { ReportHistory } from '../entities/report-history.entity';
 import { CommentConstants } from '../constants/comment.constants';
+import { LikeHistory } from '../entities/like-history.entity';
 
 @Injectable()
 export class CommentService {
@@ -31,12 +33,24 @@ export class CommentService {
     await Comment.save(comment);
   }
 
+  async delete(commentId: number) {
+    const comment = await this.getCommentById(commentId);
+    await Comment.remove(comment);
+  }
+
   async report(ip: string, commentId: number) {
     const comment = await this.getCommentById(commentId);
     await this.checkDuplicatedReport(ip, commentId);
     const reportHistory = ReportHistory.of(ip, comment.id);
     await ReportHistory.save(reportHistory);
     await this.countReportAndHide(commentId);
+  }
+
+  async like(ip: string, commentId: number) {
+    const comment = await this.getCommentById(commentId);
+    await this.checkDuplicatedLike(ip, commentId);
+    const likeHistory = LikeHistory.of(ip, comment.id);
+    await LikeHistory.save(likeHistory);
   }
 
   // Post관련 기능이 따로 없어서 분리하지 않음!
@@ -64,6 +78,15 @@ export class CommentService {
     // 이미 신고한 댓글
     if (existHistory.length > 0) {
       throw new DuplicatedCommentReportException();
+    }
+  }
+
+  private async checkDuplicatedLike(ip: string, commentId: number) {
+    const existHistory = await ReportHistory.findBy({ ip, commentId });
+
+    // 이미 좋아요 한 댓글
+    if (existHistory.length > 0) {
+      throw new DuplicatedCommentLikeException();
     }
   }
 

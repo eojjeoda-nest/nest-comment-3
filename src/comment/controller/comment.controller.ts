@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CommentService } from '../service/comment.service';
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
@@ -36,9 +44,21 @@ export class CommentController {
     return new Page(total, page.pageSize, comments);
   }
 
+  // 댓글 삭제 api
+  @Delete('/:id')
+  async delete(@Param('id') id: number) {
+    await this.commentService.delete(id);
+  }
+
   // 신고하기 api
   @Post('/report/:id')
   async report(@Param('id') id: number, @RealIp() ip: string) {
     await this.commentService.report(ip, id);
+  }
+
+  // 좋아요 api
+  @Post('/like/:id')
+  async like(@Param('id') id: number, @RealIp() ip: string) {
+    await this.commentService.like(ip, id);
   }
 }

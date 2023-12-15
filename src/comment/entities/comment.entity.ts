@@ -34,10 +34,14 @@ export class Comment extends CommonEntity {
   post: Post;
 
   // 인접리스트 자기참조
-  @ManyToOne(() => Comment, (category) => category.children)
+  @ManyToOne(() => Comment, (category) => category.children, {
+    onDelete: 'CASCADE',
+  })
   parent: Comment;
 
-  @OneToMany(() => Comment, (category) => category.parent)
+  @OneToMany(() => Comment, (category) => category.parent, {
+    cascade: true,
+  })
   children: Comment[];
 
   static of(post: Post, partial: Partial<Comment>): Comment {

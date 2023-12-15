@@ -17,3 +17,13 @@ export class DuplicatedCommentReportException extends BaseException {
     );
   }
 }
+
+export class DuplicatedCommentLikeException extends BaseException {
+  constructor() {
+    super(
+      HttpStatus.BAD_REQUEST,
+      CommentExceptionCodeEnum.DuplicatedLike,
+      '중복된 좋아요 요청입니다',
+    );
+  }
+}
