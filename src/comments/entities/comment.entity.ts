@@ -12,13 +12,17 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
+import { COMMENT_VALIDATION_CONSTANTS } from '../constants';
 
 @Entity()
 export class CommentEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
   primaryCommentId: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: COMMENT_VALIDATION_CONSTANTS.COMMENT_MAX_LENGTH,
+  })
   content: string;
 
   @Column({ default: false })
