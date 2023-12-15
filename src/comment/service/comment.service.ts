@@ -12,7 +12,6 @@ import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
 import { ReportHistory } from '../entities/report-history.entity';
 import { CommentConstants } from '../constants/comment.constants';
 import { LikeHistory } from '../entities/like-history.entity';
-import { getRepository } from 'typeorm';
 import { Page } from '../../common/dto/page-response.dto';
 import { CommentGetDto } from '../dto/comment-get.dto';
 
@@ -43,20 +42,7 @@ export class CommentService {
 
   async findAllComments(page: CommentGetDto) {
     const total = await Comment.count();
-
-    const query = Comment.createQueryBuilder('comment')
-      .where('comment.isHidden = :isHidden', { isHidden: false })
-      .orderBy('comment.createdAt', 'DESC')
-      .take(page.getLimit())
-      .skip(page.getOffset())
-      .leftJoinAndMapMany(
-        'comment.children',
-        Comment,
-        'children',
-        'children.parentId = comment.id',
-      );
-
-    const comments = await query.getMany();
+    const comments = await Comment.findAllComments(page);
 
     return new Page(total, page.pageSize, comments);
   }

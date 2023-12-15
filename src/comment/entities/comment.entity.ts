@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { CommonEntity } from '../../common/entity/common.entity';
 import { Post } from './post.entity';
+import { CommentGetDto } from '../dto/comment-get.dto';
 
 /*
 1. 작성자1~20글자 사이x
@@ -63,5 +64,21 @@ export class Comment extends CommonEntity {
     Object.assign(comment, partial);
 
     return comment;
+  }
+
+  static async findAllComments(page: CommentGetDto) {
+    const query = Comment.createQueryBuilder('comment')
+      .where('comment.isHidden = :isHidden', { isHidden: false })
+      .orderBy('comment.createdAt', 'DESC')
+      .take(page.getLimit())
+      .skip(page.getOffset())
+      .leftJoinAndMapMany(
+        'comment.children',
+        Comment,
+        'children',
+        'children.parentId = comment.id',
+      );
+
+    return await query.getMany();
   }
 }
