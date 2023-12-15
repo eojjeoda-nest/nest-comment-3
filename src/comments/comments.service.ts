@@ -145,7 +145,16 @@ export class CommentsService {
         content: comment.content,
         isHide: comment.isHide,
         likeCount: comment.likeCount,
-        children: comment.children, //TODO: 이 부분 결과 확인 필요 (Swagger 페이징 처리 확인 필요)
+        children: comment.children.map((comment) => {
+          return {
+            primaryCommentId: comment.primaryCommentId,
+            primaryPostId: comment.primaryPostId,
+            primaryUserId: comment.primaryUserId,
+            content: comment.content,
+            isHide: comment.isHide,
+            likeCount: comment.likeCount,
+          };
+        }), //TODO: 이 부분 결과 확인 필요 (Swagger 페이징 처리 확인 필요)
       };
     });
 
