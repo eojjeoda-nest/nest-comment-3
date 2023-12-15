@@ -41,8 +41,6 @@ export class CommentLikesService {
     });
     if (!commentExistValue) new NotFoundException('존재하지 않는 댓글입니다.');
 
-    console.log(primaryCommentId, primaryUserId);
-
     const commentLike = await this.commentLikeEntityRepository.findOne({
       where: { primaryCommentId, primaryUserId },
     });
@@ -65,7 +63,7 @@ export class CommentLikesService {
 
       // TODO: 반환 값 어떻게 관리하는게 좋을까?
       const data: CreateCommentLikeResponseDto = {
-        primaryCommentId: newCommentLikeEntity.comment.primaryCommentId,
+        primaryCommentId,
         isLike: newCommentLikeEntity.isLike,
       };
 

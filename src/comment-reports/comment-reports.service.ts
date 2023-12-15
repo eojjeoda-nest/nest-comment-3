@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCommentReportRequestDto } from './dto/request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -78,7 +82,7 @@ export class CommentReportsService {
       return data;
     } else {
       if (commentReport.isReport === true) {
-        return '이미 신고한 댓글입니다.';
+        throw new BadRequestException('이미 신고한 댓글입니다.');
       } else {
         commentReport.isReport = true;
         commentReport.reportReason = reportReason;

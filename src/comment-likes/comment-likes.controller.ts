@@ -28,7 +28,7 @@ export class CommentLikesController {
     // type: Error, //TODO: 에러에 대한 타입을 따로 정의해야 할까?
   })
   @ApiParam({
-    name: 'commentId',
+    name: 'primaryCommentId',
     description: '댓글/대댓글 아이디',
     required: true,
   })
