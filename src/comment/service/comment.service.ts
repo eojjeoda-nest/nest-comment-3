@@ -9,6 +9,7 @@ import {
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
 import { ReportHistory } from '../entities/report-history.entity';
+import { CommentConstants } from '../constants/comment.constants';
 
 @Injectable()
 export class CommentService {
@@ -32,11 +33,10 @@ export class CommentService {
 
   async report(ip: string, commentId: number) {
     const comment = await this.getCommentById(commentId);
-    if (await this.isDuplicateReport(ip, commentId)) {
-      throw new DuplicatedCommentReportException();
-    }
+    await this.checkDuplicatedReport(ip, commentId);
     const reportHistory = ReportHistory.of(ip, comment.id);
     await ReportHistory.save(reportHistory);
+    await this.countReportAndHide(commentId);
   }
 
   // Post관련 기능이 따로 없어서 분리하지 않음!
@@ -58,8 +58,21 @@ export class CommentService {
     return comment;
   }
 
-  private async isDuplicateReport(ip: string, commentId: number) {
+  private async checkDuplicatedReport(ip: string, commentId: number) {
     const existHistory = await ReportHistory.findBy({ ip, commentId });
-    return existHistory.length > 0;
+
+    // 이미 신고한 댓글
+    if (existHistory.length > 0) {
+      throw new DuplicatedCommentReportException();
+    }
+  }
+
+  private async countReportAndHide(commentId: number) {
+    const reportCount = await ReportHistory.countBy({ commentId });
+    if (reportCount >= CommentConstants.REPORT_COUNT_FOR_HIDE) {
+      const comment = await this.getCommentById(commentId);
+      comment.isHidden = true;
+      await Comment.save(comment);
+    }
   }
 }
