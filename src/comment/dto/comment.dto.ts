@@ -55,6 +55,10 @@ class AddLikeCount {
   likeCount: number;
 }
 
+class AddReportCount {
+  reportCount: number;
+}
+
 export class PostCommentReq extends OmitType(CommentDto, [
   'id',
   'parentId',
@@ -65,6 +69,7 @@ export class PostCommentRes extends IntersectionType(
   AddRecomments,
   AddCreatedAt,
   AddLikeCount,
+  AddReportCount,
 ) {}
 
 export class PostCommentPageRes {

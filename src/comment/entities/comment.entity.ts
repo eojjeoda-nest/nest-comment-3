@@ -11,6 +11,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Post } from '../../post/entities/post.entity';
 import { CommentLike } from './comment-like.entity';
+import { CommentReport } from './comment-report.entity';
 
 @Entity()
 export class Comment {
@@ -53,6 +54,11 @@ export class Comment {
     cascade: true,
   })
   like: CommentLike[];
+
+  @OneToMany(() => CommentReport, (commentReport) => commentReport.comment, {
+    cascade: true,
+  })
+  report: CommentReport[];
 
   @ManyToOne(() => Post, (post) => post.comments)
   @JoinColumn({ name: 'postId' })

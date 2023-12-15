@@ -10,23 +10,23 @@ import { User } from '../../user/entities/user.entity';
 import { Comment } from './comment.entity';
 
 @Entity()
-export class CommentLike {
+export class CommentReport {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  @RelationId((self: CommentLike) => self.user)
+  @RelationId((self: CommentReport) => self.user)
   userId;
 
   @Column()
-  @RelationId((self: CommentLike) => self.comment)
+  @RelationId((self: CommentReport) => self.comment)
   commentId;
 
-  @ManyToOne(() => User, (user) => user.commentLike)
+  @ManyToOne(() => User, (user) => user.commentReport)
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.like, {
+  @ManyToOne(() => Comment, (comment) => comment.report, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'commentId' })
