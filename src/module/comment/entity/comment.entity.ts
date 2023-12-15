@@ -12,8 +12,18 @@ export class Comment extends BaseEntity {
     @Column()
     content: string;
 
+    @Column()
+    depth: number;
+
+    @Column({nullable:true})
+    parentId: number;
+
     @Column({default: 0})
     likesCount: number;
+
+    @ManyToOne(type => Comment)
+    @JoinColumn({name: "parentId"})
+    parent: Comment;
 
     @ManyToOne(type => Board, board => board.comments)
     @JoinColumn({name: "board_id"})

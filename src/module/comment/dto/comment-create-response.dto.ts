@@ -7,4 +7,6 @@ export class CommentCreateResponseDto{
     depth: number;
 
     creatorId: number;
+
+    parentId?: number;
 }
