@@ -10,9 +10,7 @@ import {
 import { CommentService } from '../service/comment.service';
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
-import { Comment } from '../entities/comment.entity';
 import { CommentGetDto } from '../dto/comment-get.dto';
-import { Page } from '../../common/dto/page-response.dto';
 import { RealIp } from 'nestjs-real-ip';
 
 @Controller('/api/v1/comments')
@@ -36,12 +34,7 @@ export class CommentController {
   // 댓글 조회 api
   @Get()
   async findAll(@Query() page: CommentGetDto) {
-    const total = await Comment.count();
-    const comments = await Comment.find({
-      take: page.getLimit(),
-      skip: page.getOffset(),
-    });
-    return new Page(total, page.pageSize, comments);
+    return await this.commentService.findAllComments(page);
   }
 
   // 댓글 삭제 api

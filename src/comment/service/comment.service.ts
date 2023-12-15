@@ -12,6 +12,9 @@ import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
 import { ReportHistory } from '../entities/report-history.entity';
 import { CommentConstants } from '../constants/comment.constants';
 import { LikeHistory } from '../entities/like-history.entity';
+import { getRepository } from 'typeorm';
+import { Page } from '../../common/dto/page-response.dto';
+import { CommentGetDto } from '../dto/comment-get.dto';
 
 @Injectable()
 export class CommentService {
@@ -36,6 +39,26 @@ export class CommentService {
   async delete(commentId: number) {
     const comment = await this.getCommentById(commentId);
     await Comment.remove(comment);
+  }
+
+  async findAllComments(page: CommentGetDto) {
+    const total = await Comment.count();
+
+    const query = Comment.createQueryBuilder('comment')
+      .where('comment.isHidden = :isHidden', { isHidden: false })
+      .orderBy('comment.createdAt', 'DESC')
+      .take(page.getLimit())
+      .skip(page.getOffset())
+      .leftJoinAndMapMany(
+        'comment.children',
+        Comment,
+        'children',
+        'children.parentId = comment.id',
+      );
+
+    const comments = await query.getMany();
+
+    return new Page(total, page.pageSize, comments);
   }
 
   async report(ip: string, commentId: number) {
