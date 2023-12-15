@@ -9,10 +9,10 @@ import { Comment } from './entities/comment.entity';
 import { PostCommentReq } from './dto/comment.dto';
 import { plainToInstance } from 'class-transformer';
 import { CommentMapper } from './mapper/comment.mapper';
-import { PostCommentLikeReq } from './dto/commentLike.dto';
+import { PostCommentLikeReq } from './dto/comment-like.dto';
 import { CommentLike } from './entities/comment-like.entity';
 import { User } from '../user/entities/user.entity';
-import { CommentLikeMapper } from './mapper/commentLike.mapper';
+import { CommentLikeMapper } from './mapper/comment-like.mapper';
 
 @Injectable()
 export class CommentService {
@@ -30,13 +30,13 @@ export class CommentService {
   async createComment(dto: PostCommentReq) {
     const comment: Comment = plainToInstance(Comment, dto);
     const result = await this.commentRepository.save(comment);
-    return this.commentMapper.toPostCommentRes(result);
+    return this.commentMapper.toPostCommentRes(result, 0);
   }
 
   async createRecomment(id: number, dto: PostCommentReq) {
     const recomment: Comment = this.commentMapper.toEntity(dto, id);
     const result = await this.commentRepository.save(recomment);
-    return this.commentMapper.toPostCommentRes(result);
+    return this.commentMapper.toPostCommentRes(result, 0);
   }
 
   async deleteComment(id: number) {

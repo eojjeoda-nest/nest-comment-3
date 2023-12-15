@@ -23,7 +23,7 @@ export class PostService {
       take,
       skip: (page - 1) * limit,
       where: { postId: id, parentId: IsNull() },
-      relations: ['recomments'],
+      relations: ['recomments', 'like'],
     });
 
     const meta = plainToInstance(PageDto, {

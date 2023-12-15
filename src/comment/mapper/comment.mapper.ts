@@ -18,7 +18,7 @@ export class CommentMapper {
     return comment;
   }
 
-  toPostCommentRes(entity: Comment) {
+  toPostCommentRes(entity: Comment, likeCount: number) {
     const dto = new PostCommentRes();
     dto.id = entity.id;
     dto.writer = entity.writer;
@@ -28,16 +28,17 @@ export class CommentMapper {
     dto.parentId = entity.parentId;
     dto.createdAt = entity.createdAt;
     dto.recomments = entity.recomments;
+    dto.likeCount = likeCount;
     return dto;
   }
 
   toPostCommentPageRes(comments: Comment[], meta: PageDto) {
     const dto = new PostCommentPageRes();
-    const postCommentRess: PostCommentRes[] = comments.map((comment) => {
-      return this.toPostCommentRes(comment);
+    const postCommentRes: PostCommentRes[] = comments.map((comment) => {
+      return this.toPostCommentRes(comment, comment.like.length);
     });
 
-    dto.data = postCommentRess;
+    dto.data = postCommentRes;
     dto.meta = meta;
     return dto;
   }

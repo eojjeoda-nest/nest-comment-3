@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { PostCommentReq, PostCommentRes } from './dto/comment.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PostCommentLikeReq, PostCommentLikeRes } from './dto/commentLike.dto';
+import { PostCommentLikeReq, PostCommentLikeRes } from './dto/comment-like.dto';
 
 @Controller('api/v1/comment')
 @ApiTags('댓글 API')
