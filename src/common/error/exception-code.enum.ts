@@ -7,4 +7,5 @@ export enum PostExceptionCodeEnum {
 }
 export enum CommentExceptionCodeEnum {
   CommentNotFound = 'C0001',
+  DuplicatedReport = 'C0002',
 }

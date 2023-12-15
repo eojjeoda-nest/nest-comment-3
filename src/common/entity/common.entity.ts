@@ -12,6 +12,7 @@ export class CommonEntity extends BaseEntity {
   @UpdateDateColumn({ nullable: true })
   updatedAt: Date;
 
+  // TODO: 제거?
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 }

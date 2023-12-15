@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CommentService } from '../service/comment.service';
 import { PostCommentCreateDto } from '../dto/post-comment.create.dto';
 import { ReplyCommentCreateDto } from '../dto/reply-comment.create.dto';
 import { Comment } from '../entities/comment.entity';
 import { CommentGetDto } from '../dto/comment-get.dto';
 import { Page } from '../../common/dto/page-response.dto';
+import { RealIp } from 'nestjs-real-ip';
 
 @Controller('/api/v1/comments')
 export class CommentController {
@@ -35,5 +36,9 @@ export class CommentController {
     return new Page(total, page.pageSize, comments);
   }
 
-  //
+  // 신고하기 api
+  @Post('/report/:id')
+  async report(@Param('id') id: number, @RealIp() ip: string) {
+    await this.commentService.report(ip, id);
+  }
 }

@@ -30,7 +30,6 @@ export class Comment extends CommonEntity {
   @Column({ default: false })
   isHidden: boolean;
 
-  @Column()
   @ManyToOne(() => Post, (post) => post.comments)
   post: Post;
 

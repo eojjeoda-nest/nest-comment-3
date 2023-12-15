@@ -48,6 +48,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     response.status(res.statusCode).json({
       errorCode: res.errorCode,
       statusCode: res.statusCode,
+      message: res.message,
       timestamp: new Date(),
       path: request.url,
     });
