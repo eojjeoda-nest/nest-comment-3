@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostRequestDto } from './dto/request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
@@ -18,19 +18,17 @@ export class PostsService {
   async create(
     createPostRequestDto: CreatePostRequestDto,
   ): Promise<CreatePostResponseDto> {
-    const { userId, content, title } = createPostRequestDto;
+    const { primaryUserId, content, title } = createPostRequestDto;
 
-    const userEntity = await this.userEntityRepository.findOne({
-      where: { userId },
+    const user = await this.userEntityRepository.findOne({
+      where: { primaryUserId },
     });
-
-    // FIXME: 에러처리 다시하기
-    if (!userEntity) throw new Error('User not found');
+    if (!user) throw new NotFoundException('존재하지 않는 유저입니다.');
 
     const postEntity = this.postEntityRepository.create({
       content,
       title,
-      user: userEntity,
+      user,
     });
 
     const savedPostEntity = await this.postEntityRepository.save(postEntity);
@@ -40,6 +38,7 @@ export class PostsService {
       title: savedPostEntity.title,
       content: savedPostEntity.content,
       userId: savedPostEntity.user.userId,
+      primaryUserId: savedPostEntity.user.primaryUserId,
     };
 
     return data;

@@ -4,5 +4,5 @@ import { UserDto } from 'src/users/dto/user.dto';
 
 export class CreatePostResponseDto extends IntersectionType(
   PostDto,
-  PickType(UserDto, ['userId']),
+  PickType(UserDto, ['userId', 'primaryUserId']),
 ) {}
