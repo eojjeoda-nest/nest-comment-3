@@ -1,5 +1,5 @@
 import { IntersectionType, PickType } from '@nestjs/swagger';
-import { PostDto } from './user.dto';
+import { PostDto } from './post.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 
 export class CreatePostRequestDto extends IntersectionType(

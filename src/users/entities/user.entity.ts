@@ -1,3 +1,4 @@
+import { CommentLikeEntity } from 'src/comment-likes/entities/comment-like.entity';
 import { CommentEntity } from 'src/comments/entities/comment.entity';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { PostEntity } from 'src/posts/entities/post.entity';
@@ -20,4 +21,7 @@ export class UserEntity extends CommonEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.user)
   comments: CommentEntity[];
+
+  @OneToMany(() => CommentLikeEntity, (commentLike) => commentLike.user)
+  commentLikes: CommentLikeEntity[];
 }

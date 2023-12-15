@@ -47,6 +47,7 @@ export class CommentsService {
       userId: savedCommentEntity.user.userId,
       primaryPostId: savedCommentEntity.post.primaryPostId,
       isHide: savedCommentEntity.isHide,
+      likeCount: savedCommentEntity.likeCount,
     };
 
     return data;
@@ -90,6 +91,7 @@ export class CommentsService {
       userId: savedRecommentEntity.user.userId,
       primaryPostId: savedRecommentEntity.post.primaryPostId,
       isHide: savedRecommentEntity.isHide,
+      likeCount: savedRecommentEntity.likeCount,
     };
 
     return data;
@@ -123,6 +125,7 @@ export class CommentsService {
         userId: comment.user.userId,
         isHide: comment.isHide,
         children: comment.children,
+        likeCount: comment.likeCount,
       };
     });
 
