@@ -13,8 +13,9 @@ export class ErrorResponse {
     if (typeof exceptionResponse === 'string') {
       return exceptionResponse;
     } else {
-      // TODO: 배열로 들어오는 경우도 있으니 처리 하기
-      return exceptionResponse['message']; // validationpipe option 설정에 따라 다름 => stopAtFirstError: true,
+      return typeof exceptionResponse['message'] === 'object'
+        ? exceptionResponse['message'][0]
+        : exceptionResponse['message']; // validationpipe option 설정에 따라 다름 => stopAtFirstError: true,
     }
   }
 
