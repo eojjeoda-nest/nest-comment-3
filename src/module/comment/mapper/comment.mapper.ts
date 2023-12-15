@@ -19,9 +19,10 @@ export class CommentMapper{
     EntityToDto(comment: Comment): CommentCreateResponseDto{
         return {
             content: comment.content,
-            creatorId: comment.creator.id,
-            boardId: comment.board.id,
-            depth: comment.depth
+            creatorId: comment.creator?.id,
+            boardId: comment.board?.id,
+            depth: comment.depth,
+            likesCount: comment.likesCount
         }
     }
 

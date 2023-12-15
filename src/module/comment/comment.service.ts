@@ -10,6 +10,9 @@ import { Comment } from './entity/comment.entity';
 import { CommentMapper } from './mapper/comment.mapper';
 import { CommentReplyCreateDto } from './dto/comment-reply-create.dto';
 import { NotFoundParentCommentException } from './commentException/NotFoundParentCommentException';
+import { CommentUpdateLikesDto } from './dto/comment-update-likes.dto';
+import { NotFoundCommentException } from './commentException/NotFoundCommentException';
+import { UserLikesAlreadyException } from './commentException/UserLikesAlreadyException';
 
 @Injectable()
 export class CommentService {
@@ -22,6 +25,8 @@ export class CommentService {
         private readonly commentRepository: Repository<Comment>,
         private readonly commentMapper: CommentMapper
     ){}
+
+    private userLikesMap = new Map<string, boolean>();
 
     async createComment(commentCreateDto: CommentCreateDto): Promise<Comment>{
         const creator = await this.userRepository.findOne({where: {id: commentCreateDto.creatorId}});
@@ -37,7 +42,7 @@ export class CommentService {
         return await this.commentRepository.save(newCommentEntity);
     }
 
-    async createReplyComment(commentReplyCreateDto: CommentReplyCreateDto){
+    async createReplyComment(commentReplyCreateDto: CommentReplyCreateDto): Promise<Comment>{
         const creator = await this.userRepository.findOne({where: {id: commentReplyCreateDto.creatorId}});
         if(!creator){
             throw new NotFoundUserException();
@@ -54,4 +59,30 @@ export class CommentService {
         const newReplyComment = this.commentMapper.ReplyDtoToEntity(commentReplyCreateDto, creator, board, replyCommentDepth);
         return await this.commentRepository.save(newReplyComment);
     }
+
+    async updateCommentLikes(commentUpdateLikesDto: CommentUpdateLikesDto){
+        const creator = await this.userRepository.findOne({where: {id: commentUpdateLikesDto.creatorId}});
+        if(!creator){
+            throw new NotFoundUserException();
+        }
+        const board = await this.boardRepository.findOne({where: {id: commentUpdateLikesDto.boardId}});
+        if(!board){
+            throw new NotFoundBoardException();
+        }
+        const comment = await this.commentRepository.findOne({where: {id: commentUpdateLikesDto.id}});
+        if(!comment){
+            throw new NotFoundCommentException();
+        }
+        
+        const key = `${commentUpdateLikesDto.creatorId}_${commentUpdateLikesDto.id}`;
+
+        if (!this.userLikesMap.has(key)) {
+            comment.likesCount += 1; 
+            this.userLikesMap.set(key, true);
+        } else {
+            throw new UserLikesAlreadyException();
+        }
+        return await this.commentRepository.save(comment);
+    }
+
 }

@@ -9,4 +9,6 @@ export class CommentCreateResponseDto{
     creatorId: number;
 
     parentId?: number;
+
+    likesCount?: number;
 }

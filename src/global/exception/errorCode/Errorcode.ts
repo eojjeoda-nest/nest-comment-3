@@ -5,5 +5,7 @@ export enum ErrorCode {
     //Board
     BOARD_NOT_FOUND = 'B001',
     //Comment
-    COMMENT_PARENT_NOT_FOUND = 'C001'
+    COMMENT_PARENT_NOT_FOUND = 'C001',
+    COMMENT_NOT_FOUND = 'C002',
+    COMMENT_LIKES_ALREDY_PUSH = 'C003'
 }

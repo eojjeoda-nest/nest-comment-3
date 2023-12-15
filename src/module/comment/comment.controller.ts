@@ -5,6 +5,7 @@ import { Response } from 'express';
 import { CommentService } from './comment.service';
 import { CommentMapper } from './mapper/comment.mapper';
 import { CommentReplyCreateDto } from './dto/comment-reply-create.dto';
+import { CommentUpdateLikesDto } from './dto/comment-update-likes.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -32,6 +33,17 @@ export class CommentController {
     ): Promise<void>{
         const newReplyComment = await this.commentService.createReplyComment(commentReplyCreateDto);
         const response = await this.commentMapper.ReplyEntityToDto(newReplyComment);
+        res.status(HttpStatus.CREATED).json(response);
+    }
+
+    @ApiOperation({ summary: '좋아요 API'})
+    @Post('likes')
+    async updateCommentLikes(
+        @Body() commentUpdateLikesDto: CommentUpdateLikesDto,
+        @Res() res: Response
+    ): Promise<void>{
+        const updateLikesCount = await this.commentService.updateCommentLikes(commentUpdateLikesDto);
+        const response = this.commentMapper.EntityToDto(updateLikesCount);
         res.status(HttpStatus.CREATED).json(response);
     }
 }
