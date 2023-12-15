@@ -31,10 +31,14 @@ export class Comment {
   @Column({ nullable: true })
   @ApiProperty({ description: 'parentId' })
   parentId: number;
-  @ManyToOne(() => Comment, (comment) => comment.recomments)
+  @ManyToOne(() => Comment, (comment) => comment.recomments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'parentId' })
   parent: Comment;
-  @OneToMany(() => Comment, (comment) => comment.parent)
+  @OneToMany(() => Comment, (comment) => comment.parent, {
+    cascade: true,
+  })
   recomments: Comment[];
   @ManyToOne(() => Post, (post) => post.comments)
   @JoinColumn({ name: 'postId' })
