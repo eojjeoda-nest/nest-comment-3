@@ -89,7 +89,7 @@ export class CommentService {
     const user = await this.userRepository.exist({ where: { id: dto.userId } });
 
     if (!comment) {
-      throw new NotFoundException('좋아요 할 댓글이 존재하지 않습니다.');
+      throw new NotFoundException('신고할 댓글이 존재하지 않습니다.');
     } else if (!user) {
       throw new NotFoundException('존재하지 않는 유저입니다.');
     }

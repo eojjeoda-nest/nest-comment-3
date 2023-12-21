@@ -6,7 +6,6 @@ import {
 } from '../dto/comment.dto';
 import { Comment } from '../entities/comment.entity';
 import { PageDto } from '../../global/dto/page.dto';
-import { plainToInstance } from 'class-transformer';
 
 export class CommentMapper {
   toEntity(dto: PostCommentReq, id: number) {
@@ -53,6 +52,14 @@ export class CommentMapper {
     const dto = new DeleteCommentRes();
     dto.status = status;
     dto.message = message;
+    return dto;
+  }
+  toTestPostCommentReq() {
+    const dto = new PostCommentReq();
+    dto.writer = 'tester1';
+    dto.userId = 1;
+    dto.postId = 1;
+    dto.content = '다들 잘 지내시나요?';
     return dto;
   }
 }
