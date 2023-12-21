@@ -16,6 +16,7 @@ export class UsersService {
     createUseRequestDto: CreateUserRequestDto,
   ): Promise<CreateUserResponseDto> {
     const userEntity = this.userEntityRepository.create(createUseRequestDto);
+    if (userEntity) throw new Error('이미 존재하는 유저입니다.');
 
     const savedUserEntity = await this.userEntityRepository.save(userEntity);
 
