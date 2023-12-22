@@ -15,8 +15,15 @@ export class UsersService {
   async create(
     createUseRequestDto: CreateUserRequestDto,
   ): Promise<CreateUserResponseDto> {
+    const userExists = await this.userEntityRepository.findOne({
+      where: { userId: createUseRequestDto.userId },
+    });
+
+    if (userExists) {
+      throw new Error('이미 존재하는 유저입니다.');
+    }
+
     const userEntity = this.userEntityRepository.create(createUseRequestDto);
-    if (userEntity) throw new Error('이미 존재하는 유저입니다.');
 
     const savedUserEntity = await this.userEntityRepository.save(userEntity);
 
