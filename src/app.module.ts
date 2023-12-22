@@ -3,6 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { CommentsModule } from './comments/comments.module';
+import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
+import { CommentLikesModule } from './comment-likes/comment-likes.module';
+import { CommentReportsModule } from './comment-reports/comment-reports.module';
 
 @Module({
   imports: [
@@ -16,8 +21,12 @@ import { DataSource } from 'typeorm';
           username: process.env.DB_USERNAME,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_DATABASE,
+          entities: ['dist/**/*.entity{.ts,.js}'], // [Item]
+          migrations: [__dirname + '/migrations//*{.ts,.js}'],
+          migrationsRun: false,
           synchronize: process.env.DB_SYNC === 'true',
           timezone: 'Z',
+          // logging: true,
         };
       },
       async dataSourceFactory(options) {
@@ -28,6 +37,11 @@ import { DataSource } from 'typeorm';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    CommentsModule,
+    UsersModule,
+    PostsModule,
+    CommentLikesModule,
+    CommentReportsModule,
   ],
   controllers: [],
   providers: [],
