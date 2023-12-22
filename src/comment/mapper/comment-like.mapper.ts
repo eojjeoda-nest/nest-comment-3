@@ -18,4 +18,9 @@ export class CommentLikeMapper {
     dto.message = message;
     return dto;
   }
+  toTestPostCommentLikeReq() {
+    const dto = new PostCommentLikeReq();
+    dto.userId = 1;
+    return dto;
+  }
 }

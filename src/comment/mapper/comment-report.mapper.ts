@@ -18,4 +18,9 @@ export class CommentReportMapper {
     dto.message = message;
     return dto;
   }
+  toTestPostCommentRepositoryReq() {
+    const dto = new PostCommentReportReq();
+    dto.userId = 1;
+    return dto;
+  }
 }
