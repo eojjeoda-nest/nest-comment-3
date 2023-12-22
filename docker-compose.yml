@@ -5,6 +5,15 @@ volumes:
     driver: local
 
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/app
+
   db:
     image: mysql/mysql-server:8.0
     container_name: nest-dev-db3
