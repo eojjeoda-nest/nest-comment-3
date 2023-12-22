@@ -10,6 +10,7 @@ import { CommentLikeMapper } from './mapper/comment-like.mapper';
 import { CommentReportMapper } from './mapper/comment-report.mapper';
 import { CommentReport } from './entities/comment-report.entity';
 import { plainToInstance } from 'class-transformer';
+import { NotFoundException } from '@nestjs/common';
 
 const mockCommentRepository = () => ({
   save: jest.fn(),
@@ -117,8 +118,69 @@ describe('AuctionService', () => {
       // then
       expect(result).toEqual(res);
     });
-    it.todo('댓글 삭제, 성공');
-    it.todo('댓글 삭제, 실패(댓글을 찾을 수 없음)');
+    it('댓글 삭제, 성공', async () => {
+      // given
+      const commentId = 1;
+
+      jest.spyOn(commentRepository, 'exist').mockResolvedValue(new Comment());
+      const mockCommentRepositoryDeleteSpy = jest
+        .spyOn(commentRepository, 'delete')
+        .mockResolvedValue({ raw: [], affected: 1 });
+
+      const res = commentMapper.toDeleteCommentRes(
+        201,
+        '댓글/대댓글을 성공적으로 삭제하였습니다.',
+      );
+
+      //when
+      const result = await commentService.deleteComment(commentId);
+
+      // then
+      expect(result).toEqual(res);
+      expect(mockCommentRepositoryDeleteSpy).toHaveBeenCalledWith({
+        id: commentId,
+      });
+    });
+    it('댓글 삭제, 실패(댓글을 찾을 수 없음)', () => {
+      // given
+      const commentId = 1;
+
+      const mockCommentRepositoryExistSpy = jest
+        .spyOn(commentRepository, 'exist')
+        .mockResolvedValue(undefined);
+
+      //when
+      const result = async () => {
+        await commentService.deleteComment(commentId);
+      };
+
+      // then
+      expect(result).rejects.toThrowError(
+        new NotFoundException('댓글을 찾을 수 없습니다.'),
+      );
+      expect(mockCommentRepositoryExistSpy).toHaveBeenCalledWith({
+        where: { id: commentId },
+      });
+    });
+    it('댓글 삭제, 실패(댓글 삭제에 실패)', () => {
+      // given
+      const commentId = 1;
+
+      jest.spyOn(commentRepository, 'exist').mockResolvedValue(new Comment());
+      jest
+        .spyOn(commentRepository, 'delete')
+        .mockResolvedValue({ raw: [], affected: 0 });
+
+      //when
+      const result = async () => {
+        await commentService.deleteComment(commentId);
+      };
+
+      // then
+      expect(result).rejects.toThrowError(
+        new NotFoundException('댓글 삭제에 실패했습니다. 다시 시도해주세요.'),
+      );
+    });
     it.todo('좋아요, 성공');
     it.todo('좋아요, 실패(좋아요 할 댓글이 존재하지 않음)');
     it.todo('좋아요, 실패(존재하지 않는 유저)');

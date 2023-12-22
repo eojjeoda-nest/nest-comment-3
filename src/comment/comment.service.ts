@@ -51,7 +51,13 @@ export class CommentService {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
 
-    await this.commentRepository.delete({ id: id });
+    const deleteResult = await this.commentRepository.delete({ id: id });
+
+    if (deleteResult.affected == 0) {
+      throw new NotFoundException(
+        '댓글 삭제에 실패했습니다. 다시 시도해주세요.',
+      );
+    }
     return this.commentMapper.toDeleteCommentRes(
       201,
       '댓글/대댓글을 성공적으로 삭제하였습니다.',
